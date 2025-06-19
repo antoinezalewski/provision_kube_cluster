@@ -1,6 +1,6 @@
 # provision_kube_cluster
 
-Ce projet permet de provisionner un cluster Kubernetes de manière automatisée en utilisant `containerd` comme runtime et Calico.
+Ce projet permet de provisionner un cluster Kubernetes de manière automatisée avec `Ansible` en utilisant `containerd` comme runtime et `Calico` comme CNI.
 
 ## Prérequis
 
@@ -17,32 +17,32 @@ Ce projet permet de provisionner un cluster Kubernetes de manière automatisée 
     - Stockage : 20 GB de disque
 
 - Adresse MAC et UUID unique pour chaque node
-```bash
-# Pour vérifier l'adresse MAC
-ip link
+    ```bash
+    # Pour vérifier l'adresse MAC
+    ip link
 
-# Pour vérifier l'UUID
-sudo cat /sys/class/dmi/id/product_uuid
-```
+    # Pour vérifier l'UUID
+    sudo cat /sys/class/dmi/id/product_uuid
+    ```
 
 - Les nodes doivent pouvoir communiquer. Si `ufw` ou `iptables` sont utilisés, assurez-vous d'autoriser les ports suivants :
 
-### Node 'manager'
-| **Protocol** | **Direction** | **Port Range** | **Purpose** | **Used By** |
-|---|---|---|---|---|
-| TCP | Inbound | 6443 | Kubernetes API server | All |
-| TCP | Inbound | 2379-2380 | etcd server client API | kube-apiserver, etcd |
-| TCP | Inbound | 10250 | Kubelet API | Self, Control plane |
-| TCP | Inbound | 10259 | kube-scheduler | Self |
-| TCP | Inbound | 10257 | kube-controller-manager | Self |
+    ### Node 'manager'
+    | **Protocol** | **Direction** | **Port Range** | **Purpose** | **Used By** |
+    |---|---|---|---|---|
+    | TCP | Inbound | 6443 | Kubernetes API server | All |
+    | TCP | Inbound | 2379-2380 | etcd server client API | kube-apiserver, etcd |
+    | TCP | Inbound | 10250 | Kubelet API | Self, Control plane |
+    | TCP | Inbound | 10259 | kube-scheduler | Self |
+    | TCP | Inbound | 10257 | kube-controller-manager | Self |
 
-### Node 'worker'
-| **Protocol** | **Direction** | **Port Range** | **Purpose** | **Used By** |
-|---|---|---|---|---|
-| TCP | Inbound | 10250 | Kubelet API | Self, Control plane |
-| TCP | Inbound | 10256 | kube-proxy | Self, Load balancers |
-| TCP | Inbound | 30000-32767 | NodePort Services† | All |
-| UDP | Inbound | 30000-32767 | NodePort Services† | All |
+    ### Node 'worker'
+    | **Protocol** | **Direction** | **Port Range** | **Purpose** | **Used By** |
+    |---|---|---|---|---|
+    | TCP | Inbound | 10250 | Kubelet API | Self, Control plane |
+    | TCP | Inbound | 10256 | kube-proxy | Self, Load balancers |
+    | TCP | Inbound | 30000-32767 | NodePort Services† | All |
+    | UDP | Inbound | 30000-32767 | NodePort Services† | All |
 
 ## Installation
 
@@ -101,9 +101,10 @@ sudo cat /sys/class/dmi/id/product_uuid
 
 ## Structure du projet
 
-- `provision_kube_cluster.yaml` : Fichier de configuration Ansible pour provisionner le cluster Kubernetes.
+- `provision_kube_cluster.yaml` : Playbook Ansible pour provisionner le cluster Kubernetes.
 - `config.toml` : Fichier de configuration containerd
 - `crid.yaml` : Fichier de configuration CRI pour Kubernetes.
+- `inventory.ini` : Fichier inventaire pour Ansible
 
 ## Contribution
 
