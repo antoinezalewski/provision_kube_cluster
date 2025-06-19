@@ -63,17 +63,40 @@ sudo cat /sys/class/dmi/id/product_uuid
 
 ## Utilisation
 
-Après le déploiement, initialisez `kubeadm` :
-```bash
-# Depuis le manager :
-sudo kubeadm init --control-plane-endpoint <IP de votre manager>:6443 --pod-network-cidr=10.244.0.0/16
-```
+1. Après le déploiement, initialisez `kubeadm`
+    ```bash
+    # Depuis le manager :
+    sudo kubeadm init --control-plane-endpoint <IP de votre manager>:6443 --pod-network-cidr=10.244.0.0/16
+    ```
 
-Après plusieurs minutes, le cluster est déployé. Configurez l'accès aux commandes `kubectl`
-```bash
-mkdir -p $HOME/.kube
+2. Après plusieurs minutes, le cluster est déployé. Configurez l'accès aux commandes `kubectl`
+    ```bash
+    mkdir -p $HOME/.kube
+    sudo cp -i /etc/kubernetes/admin.conf $HOME/.kube/config
+    sudo chown $(id -u):$(id -g) $HOME/.kube/config
+    ```
 
-```
+3. Installez le plugin réseau (CNI) `Calico`
+    ```bash
+    kubectl apply -f https://docs.projectcalico.org/manifests/calico.yaml
+    ```
+
+4. Ajoutez les différents nodes au cluster
+    ```bash
+    # Pour joindre un node 'manager'
+    kubeadm join 10.59.0.201:6443 --token <TOKEN> \
+	--discovery-token-ca-cert-hash <HASH> \
+	--control-plane
+    ```
+    ```bash
+    kubeadm join 10.59.0.201:6443 --token <TOKEN> \
+	--discovery-token-ca-cert-hash <HASH>
+    ```
+
+5. Vérifiez la configuration du cluster
+    ```bash
+    kubectl get nodes -o wide
+    ```
 
 ## Structure du projet
 
