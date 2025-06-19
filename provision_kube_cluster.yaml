@@ -14,13 +14,13 @@
       net.bridge.bridge-nf-call-iptables: 1
   tasks:
     - name: Install packages | {{ inventory_hostname }}
-        ansible.builtin.package:
-          name:
-            - apt-transport-https
-            - ca-certificates
-            - curl
-            - gpg
-          state: present
+      ansible.builtin.package:
+        name:
+          - apt-transport-https
+          - ca-certificates
+          - curl
+          - gpg
+        state: present
     - name: Add Kubernetes GPG key | {{ inventory_hostname }}
       ansible.builtin.get_url:
         url: https://pkgs.k8s.io/core:/stable:/v{{ kube_version }}/deb/Release.key
