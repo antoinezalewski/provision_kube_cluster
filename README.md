@@ -4,6 +4,8 @@ Ce projet permet de provisionner un cluster Kubernetes de manière automatisée 
 
 ## Prérequis
 
+- Ansible
+
 - Node 'manager'
     - CPU : 2 coeurs minimum
     - Mémoire : 2 GB de RAM minimum
