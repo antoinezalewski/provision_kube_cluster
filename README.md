@@ -58,7 +58,7 @@ sudo cat /sys/class/dmi/id/product_uuid
 
 3. Exécutez le playbook :
     ```bash
-    ansible-playbook provision_kube_cluster.yaml
+    ansible-playbook provision_kube_cluster.yaml -i files/inventory.ini
     ```
 
 ## Utilisation
