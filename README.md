@@ -52,9 +52,10 @@ sudo cat /sys/class/dmi/id/product_uuid
     cd provision_kube_cluster
     ```
 
-2. Créez votre inventaire statique en créant les groupes :
-    - `kube_manager`
-    - `kube_node`
+2. Modifiez l'inventaire en fonction de votre architecture
+    ```bash
+    vi files/inventory.ini
+    ```
 
 3. Exécutez le playbook :
     ```bash
