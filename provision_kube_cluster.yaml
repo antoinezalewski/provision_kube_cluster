@@ -38,6 +38,24 @@
           - kubectl
           - containerd
         state: present
+    - name: Add Helm GPG key | {{ inventory_hostname }}
+      ansible.builtin.shell:
+        curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null
+      args:
+        creates: /usr/share/keyrings/helm.gpg
+      when: "'kube_manager' in group_names"
+    - name: Add Helm repository | {{ inventory_hostname }}
+      ansible.builtin.apt_repository:
+        repo: "deb [arch={{ ansible_architecture }} signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+        filename: helm-stable-debian
+        state: present
+        update_cache: true
+      when: "'kube_manager' in group_names"
+    - name: Install Helm | {{ inventory_hostname }}
+      ansible.builtin.apt:
+        name: helm
+        state: present
+      when: "'kube_manager' in group_names"
     - name: Hold version | {{ inventory_hostname }}
       ansible.builtin.dpkg_selections:
         name: "{{ item }}"
