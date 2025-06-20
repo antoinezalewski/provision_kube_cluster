@@ -30,14 +30,6 @@
         repo: "deb [signed-by=/etc/apt/keyrings/kubernetes-apt-keyring.asc] https://pkgs.k8s.io/core:/stable:/v{{ kube_version }}/deb/ /"
         state: present
         update_cache: true
-    - name: Install packages | {{ inventory_hostname }}
-      ansible.builtin.package:
-        name:
-          - kubelet
-          - kubeadm
-          - kubectl
-          - containerd
-        state: present
     - name: Add Helm GPG key | {{ inventory_hostname }}
       ansible.builtin.shell:
         curl https://baltocdn.com/helm/signing.asc | gpg --dearmor | tee /usr/share/keyrings/helm.gpg > /dev/null
@@ -50,6 +42,18 @@
         filename: helm-stable-debian
         state: present
         update_cache: true
+      when: "'kube_manager' in group_names"
+    - name: Install kubernetes packages | {{ inventory_hostname }}
+      ansible.builtin.package:
+        name:
+          - kubelet
+          - kubeadm
+          - kubectl
+          - containerd
+        state: present
+    - name: Mettre à jour le cache APT
+      apt:
+        update_cache: yes
       when: "'kube_manager' in group_names"
     - name: Install Helm | {{ inventory_hostname }}
       ansible.builtin.apt:
