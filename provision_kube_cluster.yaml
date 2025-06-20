@@ -46,7 +46,7 @@
       when: "'kube_manager' in group_names"
     - name: Add Helm repository | {{ inventory_hostname }}
       ansible.builtin.apt_repository:
-        repo: "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
+        repo: "deb [arch=amd64 signed-by=/usr/share/keyrings/helm.gpg] https://baltocdn.com/helm/stable/debian/ all main"
         filename: helm-stable-debian
         state: present
         update_cache: true
